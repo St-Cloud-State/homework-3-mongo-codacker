@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loan Application Portal</title>
+</head>
+<body>
+  <h1>Loan Application System</h1>
+
+  <h3>1. Apply</h3>
+  <form action="/accept_application" method="post">
+    Name: <input name="name"><br>
+    Zipcode: <input name="zipcode"><br>
+    <input type="submit" value="Submit Application">
+  </form>
+
+  <h3>2. Check Status</h3>
+  <form method="get" onsubmit="event.preventDefault(); checkStatus();">
+    Application ID: <input id="status_id"><br>
+    <button type="submit">Check</button>
+    <p id="status_result"></p>
+  </form>
+
+  <h3>3. Change Status</h3>
+  <form action="/change_status" method="post">
+    Application ID: <input name="application_id"><br>
+    New Status: <input name="new_status"><br>
+    <input type="submit" value="Update">
+  </form>
+
+  <h3>4. Add Processing Note</h3>
+  <form action="/add_note" method="post">
+    Application ID: <input name="application_id"><br>
+    Phase: <input name="phase"><br>
+    Message: <input name="message"><br>
+    <input type="submit" value="Add Note">
+  </form>
+
+  <h3>5. Reject Application</h3>
+  <form action="/reject_application" method="post">
+    Application ID: <input name="application_id"><br>
+    Reason: <input name="reason"><br>
+    <input type="submit" value="Reject">
+  </form>
+
+  <h3>6. View Notes</h3>
+  <form method="get" onsubmit="event.preventDefault(); viewNotes();">
+    Application ID: <input id="notes_id"><br>
+    <button type="submit">View</button>
+    <pre id="notes_result"></pre>
+  </form>
+
+  <script>
+    async function checkStatus() {
+      const id = document.getElementById("status_id").value;
+      const res = await fetch(`/check_status/${id}`);
+      const data = await res.json();
+      document.getElementById("status_result").innerText = JSON.stringify(data);
+    }
+
+    async function viewNotes() {
+      const id = document.getElementById("notes_id").value;
+      const res = await fetch(`/view_notes/${id}`);
+      const data = await res.json();
+      document.getElementById("notes_result").innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
